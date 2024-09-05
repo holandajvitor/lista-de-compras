@@ -1,19 +1,18 @@
-let listaDeItens = []; //É um array vazio que vai armazenar os itens da lista de compras.
-let itemAEditar; // Índice do item que está sendo editado.
+let listaDeItens = []; 
+let itemAEditar; 
 
 const form = document.getElementById("form-itens");
 const itensInput = document.getElementById("receber-item");
 const ulItens = document.getElementById("lista-de-itens");
 const ulItensComprados = document.getElementById("itens-comprados");
-const listaRecuperada = localStorage.getItem("listaDeItens"); //String obtida do localStorage que pode conter a lista previamente salva.
-
+const listaRecuperada = localStorage.getItem("listaDeItens"); 
 function atualizaLocalStorage() {
-  //Converte o array listaDeItens em uma string JSON e o salva no localStorage com a chave "listaDeItens".
+  
 
   localStorage.setItem("listaDeItens", JSON.stringify(listaDeItens));
 }
 
-//Verifica se existe uma lista salva no localStorage. Se existir, parseia o JSON para um objeto JavaScript e atribui a listaDeItens, então chama mostrarItem() para renderizar a lista. Se não existir, inicia listaDeItens como um array vazio.
+
 if (listaRecuperada) {
   listaDeItens = JSON.parse(listaRecuperada);
   mostrarItem();
@@ -22,17 +21,17 @@ if (listaRecuperada) {
 }
 
 form.addEventListener("submit", function (evento) {
-  //Este evento é ativado quando o formulário é enviado (quando o usuário clica em "adicionar" ou pressiona Enter).
+ 
   evento.preventDefault();
   salvarItem();
   mostrarItem();
-  itensInput.focus(); //Reposiciona o cursor automaticamente no campo de entrada após a adição do item.
+  itensInput.focus(); 
 });
 
 function salvarItem() {
   const comprasItem = itensInput.value;
   const checarDuplicado = listaDeItens.some(
-    (elemento) => elemento.valor.toUpperCase() === comprasItem.toUpperCase() //Verifica se o item já existe na lista, comparando de forma case-insensitive(maiúscula e minúscula).
+    (elemento) => elemento.valor.toUpperCase() === comprasItem.toUpperCase()
   );
 
   if (checarDuplicado) {
@@ -45,12 +44,11 @@ function salvarItem() {
 
     atualizaLocalStorage();
   }
-  itensInput.value = ""; //Limpa o campo de entrada após a adição do item.
-}
+  itensInput.value = ""; 
 
 function mostrarItem() {
-  ulItens.innerHTML = ""; // Limpa o conteúdo das listas antes
-  ulItensComprados.innerHTML = ""; // de renderizar os itens novamente.
+  ulItens.innerHTML = ""; 
+  ulItensComprados.innerHTML = ""; 
 
   listaDeItens.forEach((elemento, index) => {
     if (elemento.checar) {
@@ -87,14 +85,14 @@ function mostrarItem() {
     }
   });
 
-  const inputsCheck = document.querySelectorAll('input[type="checkbox"]'); // Seleciona todos os checkboxes e adiciona um listener para o evento "click".
-  // Quando clicado:
+  const inputsCheck = document.querySelectorAll('input[type="checkbox"]'); 
+ 
   inputsCheck.forEach((i) => {
     i.addEventListener("click", (evento) => {
       const valorDoElemento =
-        evento.target.parentElement.parentElement.getAttribute("data-value"); // Obtém o índice do item através do atributo data-value.
-      listaDeItens[valorDoElemento].checar = evento.target.checked; // Atualiza o atributo checar do item correspondente.
-      mostrarItem(); // Chama mostrarItem() para atualizar a exibição.
+        evento.target.parentElement.parentElement.getAttribute("data-value"); 
+      listaDeItens[valorDoElemento].checar = evento.target.checked; 
+      mostrarItem(); 
     });
   });
 
@@ -103,8 +101,8 @@ function mostrarItem() {
     button.addEventListener("click", (evento) => {
       valorDoElemento =
         evento.target.parentElement.parentElement.getAttribute("data-value");
-      listaDeItens.splice(valorDoElemento, 1); // Remove o item do array
-      mostrarItem(); // Atualiza a lista exibida
+      listaDeItens.splice(valorDoElemento, 1); 
+      mostrarItem();
       atualizaLocalStorage();
     });
   });
@@ -114,24 +112,23 @@ function mostrarItem() {
     button.addEventListener("click", (evento) => {
       itemAEditar =
         evento.target.parentElement.parentElement.getAttribute("data-value");
-      mostrarItem(); // Atualiza a lista exibida
-
-      // Coloca o cursor no campo de input do item a ser editado
+      mostrarItem(); 
+      
       const itemEditavel = document.querySelector(
         `[data-value="${itemAEditar}"] input[type="text"]`
       );
-      itemEditavel.focus(); // Coloca o foco no campo de texto para edição
+      itemEditavel.focus(); 
     });
   });
 }
 
 function salvarEdicao() {
   const itemEditado = document.querySelector(
-    `[data-value="${itemAEditar}"] input[type="text"]` //Seleciona o campo de texto do item que está sendo editado.
+    `[data-value="${itemAEditar}"] input[type="text"]` /
   );
   console.log(itemEditado.value);
   listaDeItens[itemAEditar].valor = itemEditado.value;
-  itemAEditar = -1; //Atualiza o valor do item na listaDeItens com o novo texto inserido.
+  itemAEditar = -1; 
   mostrarItem();
 
   atualizaLocalStorage();
