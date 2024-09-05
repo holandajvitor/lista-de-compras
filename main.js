@@ -1,17 +1,15 @@
-let listaDeItens = []; 
-let itemAEditar; 
+let listaDeItens = [];
+let itemAEditar;
 
 const form = document.getElementById("form-itens");
 const itensInput = document.getElementById("receber-item");
 const ulItens = document.getElementById("lista-de-itens");
 const ulItensComprados = document.getElementById("itens-comprados");
-const listaRecuperada = localStorage.getItem("listaDeItens"); 
-function atualizaLocalStorage() {
-  
+const listaRecuperada = localStorage.getItem("listaDeItens");
 
+function atualizaLocalStorage() {
   localStorage.setItem("listaDeItens", JSON.stringify(listaDeItens));
 }
-
 
 if (listaRecuperada) {
   listaDeItens = JSON.parse(listaRecuperada);
@@ -21,11 +19,10 @@ if (listaRecuperada) {
 }
 
 form.addEventListener("submit", function (evento) {
- 
   evento.preventDefault();
   salvarItem();
   mostrarItem();
-  itensInput.focus(); 
+  itensInput.focus();
 });
 
 function salvarItem() {
@@ -44,11 +41,12 @@ function salvarItem() {
 
     atualizaLocalStorage();
   }
-  itensInput.value = ""; 
+  itensInput.value = "";
+}
 
 function mostrarItem() {
-  ulItens.innerHTML = ""; 
-  ulItensComprados.innerHTML = ""; 
+  ulItens.innerHTML = "";
+  ulItensComprados.innerHTML = "";
 
   listaDeItens.forEach((elemento, index) => {
     if (elemento.checar) {
@@ -85,14 +83,13 @@ function mostrarItem() {
     }
   });
 
-  const inputsCheck = document.querySelectorAll('input[type="checkbox"]'); 
- 
+  const inputsCheck = document.querySelectorAll('input[type="checkbox"]');
   inputsCheck.forEach((i) => {
     i.addEventListener("click", (evento) => {
       const valorDoElemento =
-        evento.target.parentElement.parentElement.getAttribute("data-value"); 
-      listaDeItens[valorDoElemento].checar = evento.target.checked; 
-      mostrarItem(); 
+        evento.target.parentElement.parentElement.getAttribute("data-value");
+      listaDeItens[valorDoElemento].checar = evento.target.checked;
+      mostrarItem();
     });
   });
 
@@ -101,7 +98,7 @@ function mostrarItem() {
     button.addEventListener("click", (evento) => {
       valorDoElemento =
         evento.target.parentElement.parentElement.getAttribute("data-value");
-      listaDeItens.splice(valorDoElemento, 1); 
+      listaDeItens.splice(valorDoElemento, 1);
       mostrarItem();
       atualizaLocalStorage();
     });
@@ -112,24 +109,23 @@ function mostrarItem() {
     button.addEventListener("click", (evento) => {
       itemAEditar =
         evento.target.parentElement.parentElement.getAttribute("data-value");
-      mostrarItem(); 
-      
+      mostrarItem();
+
       const itemEditavel = document.querySelector(
         `[data-value="${itemAEditar}"] input[type="text"]`
       );
-      itemEditavel.focus(); 
+      itemEditavel.focus();
     });
   });
 }
 
 function salvarEdicao() {
   const itemEditado = document.querySelector(
-    `[data-value="${itemAEditar}"] input[type="text"]` /
+    `[data-value="${itemAEditar}"] input[type="text"]`
   );
-  console.log(itemEditado.value);
   listaDeItens[itemAEditar].valor = itemEditado.value;
-  itemAEditar = -1; 
+  itemAEditar = -1;
   mostrarItem();
-
   atualizaLocalStorage();
 }
+
